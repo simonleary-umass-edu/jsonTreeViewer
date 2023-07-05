@@ -379,7 +379,7 @@ var jsonTree = (function() {
     function NodeString(label, val, isLast) {
         this.type = "string";
 
-        _NodeSimple.call(this, label, '"' + val + '"', isLast);
+        _NodeSimple.call(this, label, val , isLast);
     }
     utils.inherits(NodeString,_NodeSimple);
 
@@ -455,8 +455,8 @@ var jsonTree = (function() {
                         <span class="jsontree_label-wrapper">\
                             <span class="jsontree_label">' +
                                 '<span class="jsontree_expand-button"></span>' +
-                                '"' + label +
-                            '"</span> : \
+                                label +
+                            '</span> : \
                         </span>' + str;
                 }
 
