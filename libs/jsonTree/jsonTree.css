@@ -21,7 +21,7 @@
 /* Styles for a list of child nodes */
 .jsontree_child-nodes {
     display: none;
-    margin-left: 35px; 
+    margin-left: 35px;
     margin-bottom: 5px;
     line-height: 2;
 }
@@ -55,7 +55,7 @@
 .jsontree_node_complex > .jsontree_value-wrapper {
     overflow: inherit;
 }
-.jsontree_value { 
+.jsontree_value {
     vertical-align: top;
     display: inline;
 }
