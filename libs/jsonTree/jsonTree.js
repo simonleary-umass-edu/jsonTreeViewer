@@ -386,8 +386,9 @@ var jsonTree = (function () {
                         <div class="jsontree_value-wrapper">\
                             <div class="jsontree_value jsontree_value_' + self.type + '">\
                                 <b>' + sym[0] + '</b>\
-                                <span class="jsontree_show-more">&hellip;</span>\
-                                <ul class="jsontree_child-nodes"></ul>\
+                                <span class="jsontree_show-more">&hellip;</span>' +
+                                (sym[0] == '' ? '<br>' : '') + // if sym[0] empty, we need a new line
+                                '<ul class="jsontree_child-nodes"></ul>\
                                 <b>' + sym[1] + '</b>' +
                     '</div>'
                 '</div>';
@@ -561,7 +562,7 @@ var jsonTree = (function () {
      * @param isLast {boolean} - true if node is last in list of siblings
      */
     function NodeObject(label, val, isLast) {
-        this.sym = ['{', '}'];
+        this.sym = ['', ''];
         this.type = "object";
         _NodeComplex.call(this, label, val, isLast);
     }
@@ -579,7 +580,7 @@ var jsonTree = (function () {
      * @param isLast {boolean} - true if node is last in list of siblings
      */
     function NodeArray(label, val, isLast) {
-        this.sym = ['[', ']'];
+        this.sym = ['', ''];
         this.type = "array";
         _NodeComplex.call(this, label, val, isLast);
     }
