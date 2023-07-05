@@ -231,7 +231,6 @@ var jsonTree = (function() {
                         <span class="jsontree_value jsontree_value_' + self.type + '">' +
                             val +
                         '</span>' +
-                        (!isLast ? ',' : '') +
                     '</span>';
 
                 return str;
@@ -441,7 +440,6 @@ var jsonTree = (function() {
         var self = this,
             el = document.createElement('li'),
             template = function(label, sym) {
-                var comma = (!isLast) ? ',' : '',
                     str = '\
                         <div class="jsontree_value-wrapper">\
                             <div class="jsontree_value jsontree_value_' + self.type + '">\
@@ -449,7 +447,7 @@ var jsonTree = (function() {
                                 <span class="jsontree_show-more">&hellip;</span>\
                                 <ul class="jsontree_child-nodes"></ul>\
                                 <b>' + sym[1] + '</b>' +
-                            '</div>' + comma +
+                            '</div>'
                         '</div>';
 
                 if (label !== null) {
