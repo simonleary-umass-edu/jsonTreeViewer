@@ -77,7 +77,7 @@ var jsonTree = (function() {
                     break;
 
                 case 'object':
-                    var keys = Object.keys(obj).sort();
+                    var keys = Object.keys(obj);
 
                     isLast = keys.length - 1;
 
