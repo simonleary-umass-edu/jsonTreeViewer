@@ -511,9 +511,16 @@ var jsonTree = (function() {
         self.childNodes = childNodes;
         self.childNodesUl = childNodesUl;
 
-        utils.forEachNode(val, function(label, node, isLast) {
-            self.addChild(new Node(label, node, isLast));
-        });
+        // don't print array index
+        if(this.type == "array"){
+            utils.forEachNode(val, function(label, node, isLast) {
+                self.addChild(new Node(null, node, isLast));
+            });
+        }else{
+            utils.forEachNode(val, function(label, node, isLast) {
+                self.addChild(new Node(label, node, isLast));
+            });
+        }
 
         self.isEmpty = !Boolean(childNodes.length);
         if (self.isEmpty) {
