@@ -5,22 +5,18 @@
  * Copyright 2017 Vera Lobacheva (http://iamvera.com)
  * Released under the MIT license (LICENSE.txt)
  */
-
-var jsonTree = (function() {
-
+var jsonTree = (function () {
     /* ---------- Utilities ---------- */
     var utils = {
-
         /*
          * Returns js-"class" of value
          *
          * @param val {any type} - value
          * @returns {string} - for example, "[object Function]"
          */
-        getClass : function(val) {
+        getClass: function (val) {
             return Object.prototype.toString.call(val);
         },
-
         /**
          * Checks for a type of value (for valid JSON data types).
          * In other cases - throws an exception
@@ -28,33 +24,26 @@ var jsonTree = (function() {
          * @param val {any type} - the value for new node
          * @returns {string} ("object" | "array" | "null" | "boolean" | "number" | "string")
          */
-        getType : function(val) {
+        getType: function (val) {
             if (val === null) {
                 return 'null';
             }
-
             switch (typeof val) {
                 case 'number':
                     return 'number';
-
                 case 'string':
                     return 'string';
-
                 case 'boolean':
                     return 'boolean';
             }
-
-            switch(utils.getClass(val)) {
+            switch (utils.getClass(val)) {
                 case '[object Array]':
                     return 'array';
-
                 case '[object Object]':
                     return 'object';
             }
-
             throw new Error('Bad type: ' + utils.getClass(val));
         },
-
         /**
          * Applies for each item of list some function
          * and checks for last element of the list
@@ -62,34 +51,25 @@ var jsonTree = (function() {
          * @param obj {Object | Array} - a list or a dict with child nodes
          * @param func {Function} - the function for each item
          */
-        forEachNode : function(obj, func) {
+        forEachNode: function (obj, func) {
             var type = utils.getType(obj),
                 isLast;
-
             switch (type) {
                 case 'array':
                     isLast = obj.length - 1;
-
-                    obj.forEach(function(item, i) {
+                    obj.forEach(function (item, i) {
                         func(i, item, i === isLast);
                     });
-
                     break;
-
                 case 'object':
                     var keys = Object.keys(obj);
-
                     isLast = keys.length - 1;
-
-                    keys.forEach(function(item, i) {
+                    keys.forEach(function (item, i) {
                         func(item, obj[item], i === isLast);
                     });
-
                     break;
             }
-
         },
-
         /**
          * Implements the kind of an inheritance by
          * using parent prototype and
@@ -98,23 +78,21 @@ var jsonTree = (function() {
          * @param Child {Function} - a child constructor
          * @param Parent {Function} - a parent constructor
          */
-        inherits : (function() {
-            var F = function() {};
-
-            return function(Child, Parent) {
+        inherits: (function () {
+            var F = function () { };
+            return function (Child, Parent) {
                 F.prototype = Parent.prototype;
                 Child.prototype = new F();
                 Child.prototype.constructor = Child;
             };
         })(),
-
         /*
          * Checks for a valid type of root node*
          *
          * @param {any type} jsonObj - a value for root node
          * @returns {boolean} - true for an object or an array, false otherwise
          */
-        isValidRoot : function(jsonObj) {
+        isValidRoot: function (jsonObj) {
             switch (utils.getType(jsonObj)) {
                 case 'object':
                 case 'array':
@@ -123,11 +101,10 @@ var jsonTree = (function() {
                     return false;
             }
         },
-
         /**
          * Extends some object
          */
-        extend : function(targetObj, sourceObj) {
+        extend: function (targetObj, sourceObj) {
             for (var prop in sourceObj) {
                 if (sourceObj.hasOwnProperty(prop)) {
                     targetObj[prop] = sourceObj[prop];
@@ -135,10 +112,7 @@ var jsonTree = (function() {
             }
         }
     };
-
-
     /* ---------- Node constructors ---------- */
-
     /**
      * The factory for creating nodes of defined type.
      *
@@ -172,24 +146,20 @@ var jsonTree = (function() {
      */
     function Node(label, val, isLast) {
         var nodeType = utils.getType(val);
-
         if (nodeType in Node.CONSTRUCTORS) {
             return new Node.CONSTRUCTORS[nodeType](label, val, isLast);
         } else {
             throw new Error('Bad type: ' + utils.getClass(val));
         }
     }
-
     Node.CONSTRUCTORS = {
-        'boolean' : NodeBoolean,
-        'number'  : NodeNumber,
-        'string'  : NodeString,
-        'null'    : NodeNull,
-        'object'  : NodeObject,
-        'array'   : NodeArray
+        'boolean': NodeBoolean,
+        'number': NodeNumber,
+        'string': NodeString,
+        'null': NodeNull,
+        'object': NodeObject,
+        'array': NodeArray
     };
-
-
     /*
      * The constructor for simple types (string, number, boolean, null)
      * {...
@@ -216,44 +186,38 @@ var jsonTree = (function() {
         if (this.constructor === _NodeSimple) {
             throw new Error('This is abstract class');
         }
-
         var self = this,
             el = document.createElement('li'),
             labelEl,
-            template = function(label, val) {
+            template = function (label, val) {
                 var str = '\
                     <span class="jsontree_value-wrapper">\
                         <span class="jsontree_value jsontree_value_' + self.type + '">' +
-                            val +
-                        '</span>' +
+                    val +
+                    '</span>' +
                     '</span>';
                 if (label !== null) {
                     str = '\
                     <span class="jsontree_label-wrapper">\
                         <span class="jsontree_label">' +
-                            label +
+                        label +
                         '</span> : \
                     </span>' + str;
                 }
                 return str;
             };
-
         self.label = label;
         self.isComplex = false;
-
         el.classList.add('jsontree_node');
         el.innerHTML = template(label, val);
-
         self.el = el;
         if (label !== null) {
             labelEl = el.querySelector('.jsontree_label');
-
-            labelEl.addEventListener('click', function(e) {
+            labelEl.addEventListener('click', function (e) {
                 if (e.altKey) {
                     self.toggleMarked();
                     return;
                 }
-
                 if (e.shiftKey) {
                     document.getSelection().removeAllRanges();
                     alert(self.getJSONPath());
@@ -262,46 +226,39 @@ var jsonTree = (function() {
             }, false);
         }
     }
-
     _NodeSimple.prototype = {
-        constructor : _NodeSimple,
-
+        constructor: _NodeSimple,
         /**
          * Mark node
          */
-        mark : function() {
+        mark: function () {
             this.el.classList.add('jsontree_node_marked');
         },
-
         /**
          * Unmark node
          */
-        unmark : function() {
+        unmark: function () {
             this.el.classList.remove('jsontree_node_marked');
         },
-
         /**
          * Mark or unmark node
          */
-        toggleMarked : function() {
+        toggleMarked: function () {
             this.el.classList.toggle('jsontree_node_marked');
         },
-
         /**
          * Expands parent node of this node
          *
          * @param isRecursive {boolean} - if true, expands all parent nodes
          *                                (from node to root)
          */
-        expandParent : function(isRecursive) {
+        expandParent: function (isRecursive) {
             if (!this.parent) {
                 return;
             }
-
             this.parent.expand();
             this.parent.expandParent(isRecursive);
         },
-
         /**
          * Returns JSON-path of this
          *
@@ -309,24 +266,19 @@ var jsonTree = (function() {
          *                                    (by default, in bracket notation)
          * @returns {string}
          */
-        getJSONPath : function(isInDotNotation) {
+        getJSONPath: function (isInDotNotation) {
             if (this.isRoot) {
                 return "$";
             }
-
             var currentPath;
-
             if (this.parent.type === 'array') {
                 currentPath = "[" + this.label + "]";
             } else {
                 currentPath = isInDotNotation ? "." + this.label : "['" + this.label + "']";
             }
-
             return this.parent.getJSONPath(isInDotNotation) + currentPath;
         }
     };
-
-
     /*
      * The constructor for boolean values
      * {...
@@ -341,12 +293,9 @@ var jsonTree = (function() {
      */
     function NodeBoolean(label, val, isLast) {
         this.type = "boolean";
-
         _NodeSimple.call(this, label, val, isLast);
     }
-    utils.inherits(NodeBoolean,_NodeSimple);
-
-
+    utils.inherits(NodeBoolean, _NodeSimple);
     /*
      * The constructor for number values
      * {...
@@ -361,12 +310,9 @@ var jsonTree = (function() {
      */
     function NodeNumber(label, val, isLast) {
         this.type = "number";
-
         _NodeSimple.call(this, label, val, isLast);
     }
-    utils.inherits(NodeNumber,_NodeSimple);
-
-
+    utils.inherits(NodeNumber, _NodeSimple);
     /*
      * The constructor for string values
      * {...
@@ -381,12 +327,9 @@ var jsonTree = (function() {
      */
     function NodeString(label, val, isLast) {
         this.type = "string";
-
-        _NodeSimple.call(this, label, val , isLast);
+        _NodeSimple.call(this, label, val, isLast);
     }
-    utils.inherits(NodeString,_NodeSimple);
-
-
+    utils.inherits(NodeString, _NodeSimple);
     /*
      * The constructor for null values
      * {...
@@ -400,12 +343,9 @@ var jsonTree = (function() {
      */
     function NodeNull(label, val, isLast) {
         this.type = "null";
-
         _NodeSimple.call(this, label, val, isLast);
     }
-    utils.inherits(NodeNull,_NodeSimple);
-
-
+    utils.inherits(NodeNull, _NodeSimple);
     /*
      * The constructor for complex types (object, array)
      * {...
@@ -439,184 +379,154 @@ var jsonTree = (function() {
         if (this.constructor === _NodeComplex) {
             throw new Error('This is abstract class');
         }
-
         var self = this,
             el = document.createElement('li'),
-            template = function(label, sym) {
-                    str = '\
+            template = function (label, sym) {
+                str = '\
                         <div class="jsontree_value-wrapper">\
                             <div class="jsontree_value jsontree_value_' + self.type + '">\
                                 <b>' + sym[0] + '</b>\
                                 <span class="jsontree_show-more">&hellip;</span>\
                                 <ul class="jsontree_child-nodes"></ul>\
                                 <b>' + sym[1] + '</b>' +
-                            '</div>'
-                        '</div>';
-
+                    '</div>'
+                '</div>';
                 if (label !== null) {
                     str = '\
                         <span class="jsontree_label-wrapper">\
                             <span class="jsontree_label">' +
-                                '<span class="jsontree_expand-button"></span>' +
-                                label +
-                            '</span> : \
+                        '<span class="jsontree_expand-button"></span>' +
+                        label +
+                        '</span> : \
                         </span>' + str;
                 }
-
                 return str;
             },
             childNodesUl,
             labelEl,
             moreContentEl,
             childNodes = [];
-
         self.label = label;
         self.isComplex = true;
-
         el.classList.add('jsontree_node');
         el.classList.add('jsontree_node_complex');
         el.innerHTML = template(label, self.sym);
-
         childNodesUl = el.querySelector('.jsontree_child-nodes');
-
         if (label !== null) {
             labelEl = el.querySelector('.jsontree_label');
             moreContentEl = el.querySelector('.jsontree_show-more');
-
-            labelEl.addEventListener('click', function(e) {
+            labelEl.addEventListener('click', function (e) {
                 if (e.altKey) {
                     self.toggleMarked();
                     return;
                 }
-
                 if (e.shiftKey) {
                     document.getSelection().removeAllRanges();
                     alert(self.getJSONPath());
                     return;
                 }
-
                 self.toggle(e.ctrlKey || e.metaKey);
             }, false);
-
-            moreContentEl.addEventListener('click', function(e) {
+            moreContentEl.addEventListener('click', function (e) {
                 self.toggle(e.ctrlKey || e.metaKey);
             }, false);
-
             self.isRoot = false;
         } else {
             self.isRoot = true;
             self.parent = null;
-
             el.classList.add('jsontree_node_expanded');
         }
-
         self.el = el;
         self.childNodes = childNodes;
         self.childNodesUl = childNodesUl;
-
         // don't print array index
-        if(this.type == "array"){
-            utils.forEachNode(val, function(label, node, isLast) {
+        if (this.type == "array") {
+            utils.forEachNode(val, function (label, node, isLast) {
                 self.addChild(new Node(null, node, isLast));
             });
-        }else{
-            utils.forEachNode(val, function(label, node, isLast) {
+        } else {
+            utils.forEachNode(val, function (label, node, isLast) {
                 self.addChild(new Node(label, node, isLast));
             });
         }
-
         self.isEmpty = !Boolean(childNodes.length);
         if (self.isEmpty) {
             el.classList.add('jsontree_node_empty');
         }
     }
-
     utils.inherits(_NodeComplex, _NodeSimple);
-
     utils.extend(_NodeComplex.prototype, {
-        constructor : _NodeComplex,
-
+        constructor: _NodeComplex,
         /*
          * Add child node to list of child nodes
          *
          * @param child {Node} - child node
          */
-        addChild : function(child) {
+        addChild: function (child) {
             this.childNodes.push(child);
             this.childNodesUl.appendChild(child.el);
             child.parent = this;
         },
-
         /*
          * Expands this list of node child nodes
          *
          * @param isRecursive {boolean} - if true, expands all child nodes
          */
-        expand : function(isRecursive){
+        expand: function (isRecursive) {
             if (this.isEmpty) {
                 return;
             }
-
             if (!this.isRoot) {
                 this.el.classList.add('jsontree_node_expanded');
             }
-
             if (isRecursive) {
-                this.childNodes.forEach(function(item, i) {
+                this.childNodes.forEach(function (item, i) {
                     if (item.isComplex) {
                         item.expand(isRecursive);
                     }
                 });
             }
         },
-
         /*
          * Collapses this list of node child nodes
          *
          * @param isRecursive {boolean} - if true, collapses all child nodes
          */
-        collapse : function(isRecursive) {
+        collapse: function (isRecursive) {
             if (this.isEmpty) {
                 return;
             }
-
             if (!this.isRoot) {
                 this.el.classList.remove('jsontree_node_expanded');
             }
-
             if (isRecursive) {
-                this.childNodes.forEach(function(item, i) {
+                this.childNodes.forEach(function (item, i) {
                     if (item.isComplex) {
                         item.collapse(isRecursive);
                     }
                 });
             }
         },
-
         /*
          * Expands collapsed or collapses expanded node
          *
          * @param {boolean} isRecursive - Expand all child nodes if this node is expanded
          *                                and collapse it otherwise
          */
-        toggle : function(isRecursive) {
+        toggle: function (isRecursive) {
             if (this.isEmpty) {
                 return;
             }
-
             this.el.classList.toggle('jsontree_node_expanded');
-
             if (isRecursive) {
                 var isExpanded = this.el.classList.contains('jsontree_node_expanded');
-
-                this.childNodes.forEach(function(item, i) {
+                this.childNodes.forEach(function (item, i) {
                     if (item.isComplex) {
                         item[isExpanded ? 'expand' : 'collapse'](isRecursive);
                     }
                 });
             }
         },
-
         /**
          * Find child nodes that match some conditions and handle it
          *
@@ -624,24 +534,20 @@ var jsonTree = (function() {
          * @param {Function} handler
          * @param {boolean} isRecursive
          */
-        findChildren : function(matcher, handler, isRecursive) {
+        findChildren: function (matcher, handler, isRecursive) {
             if (this.isEmpty) {
                 return;
             }
-
-            this.childNodes.forEach(function(item, i) {
+            this.childNodes.forEach(function (item, i) {
                 if (matcher(item)) {
                     handler(item);
                 }
-
                 if (item.isComplex && isRecursive) {
                     item.findChildren(matcher, handler, isRecursive);
                 }
             });
         }
     });
-
-
     /*
      * The constructor for object values
      * {...
@@ -657,12 +563,9 @@ var jsonTree = (function() {
     function NodeObject(label, val, isLast) {
         this.sym = ['{', '}'];
         this.type = "object";
-
         _NodeComplex.call(this, label, val, isLast);
     }
-    utils.inherits(NodeObject,_NodeComplex);
-
-
+    utils.inherits(NodeObject, _NodeComplex);
     /*
      * The constructor for array values
      * {...
@@ -678,14 +581,10 @@ var jsonTree = (function() {
     function NodeArray(label, val, isLast) {
         this.sym = ['[', ']'];
         this.type = "array";
-
         _NodeComplex.call(this, label, val, isLast);
     }
     utils.inherits(NodeArray, _NodeComplex);
-
-
     /* ---------- The tree constructor ---------- */
-
     /*
      * The constructor for json tree.
      * It contains only one Node (Array or Object), without property name.
@@ -704,54 +603,45 @@ var jsonTree = (function() {
     function Tree(jsonObj, domEl) {
         this.wrapper = document.createElement('ul');
         this.wrapper.className = 'jsontree_tree clearfix';
-
         this.rootNode = null;
-
         this.sourceJSONObj = jsonObj;
-
         this.loadData(jsonObj);
         this.appendTo(domEl);
     }
-
     Tree.prototype = {
-        constructor : Tree,
-
+        constructor: Tree,
         /**
          * Fill new data in current json tree
          *
          * @param {Object | Array} jsonObj - json-data
          */
-        loadData : function(jsonObj) {
+        loadData: function (jsonObj) {
             if (!utils.isValidRoot(jsonObj)) {
                 alert('The root should be an object or an array');
                 return;
             }
-
             this.sourceJSONObj = jsonObj;
-
             this.rootNode = new Node(null, jsonObj, 'last');
             this.wrapper.innerHTML = '';
             this.wrapper.appendChild(this.rootNode.el);
         },
-
         /**
          * Appends tree to DOM-element (or move it to new place)
          *
          * @param {DOMElement} domEl
          */
-        appendTo : function(domEl) {
+        appendTo: function (domEl) {
             domEl.appendChild(this.wrapper);
         },
-
         /**
          * Expands all tree nodes (objects or arrays) recursively
          *
          * @param {Function} filterFunc - 'true' if this node should be expanded
          */
-        expand : function(filterFunc) {
+        expand: function (filterFunc) {
             if (this.rootNode.isComplex) {
                 if (typeof filterFunc == 'function') {
-                    this.rootNode.childNodes.forEach(function(item, i) {
+                    this.rootNode.childNodes.forEach(function (item, i) {
                         if (item.isComplex && filterFunc(item)) {
                             item.expand();
                         }
@@ -761,56 +651,47 @@ var jsonTree = (function() {
                 }
             }
         },
-
         /**
          * Collapses all tree nodes (objects or arrays) recursively
          */
-        collapse : function() {
+        collapse: function () {
             if (typeof this.rootNode.collapse === 'function') {
                 this.rootNode.collapse('recursive');
             }
         },
-
         /**
          * Returns the source json-string (pretty-printed)
          *
          * @param {boolean} isPrettyPrinted - 'true' for pretty-printed string
          * @returns {string} - for exemple, '{"a":2,"b":3}'
          */
-        toSourceJSON : function(isPrettyPrinted) {
+        toSourceJSON: function (isPrettyPrinted) {
             if (!isPrettyPrinted) {
                 return JSON.stringify(this.sourceJSONObj);
             }
-
             var DELIMETER = "[%^$#$%^%]",
                 jsonStr = JSON.stringify(this.sourceJSONObj, null, DELIMETER);
-
             jsonStr = jsonStr.split("\n").join("<br />");
             jsonStr = jsonStr.split(DELIMETER).join("&nbsp;&nbsp;&nbsp;&nbsp;");
-
             return jsonStr;
         },
-
         /**
          * Find all nodes that match some conditions and handle it
          */
-        findAndHandle : function(matcher, handler) {
+        findAndHandle: function (matcher, handler) {
             this.rootNode.findChildren(matcher, handler, 'isRecursive');
         },
-
         /**
          * Unmark all nodes
          */
-        unmarkAll : function() {
-            this.rootNode.findChildren(function(node) {
+        unmarkAll: function () {
+            this.rootNode.findChildren(function (node) {
                 return true;
-            }, function(node) {
+            }, function (node) {
                 node.unmark();
             }, 'isRecursive');
         }
     };
-
-
     /* ---------- Public methods ---------- */
     return {
         /**
@@ -820,7 +701,7 @@ var jsonTree = (function() {
          * @param domEl {DOMElement} - the wrapper element
          * @returns {Tree}
          */
-        create : function(jsonObj, domEl) {
+        create: function (jsonObj, domEl) {
             return new Tree(jsonObj, domEl);
         }
     };

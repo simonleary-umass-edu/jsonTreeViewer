@@ -5,20 +5,18 @@
  * Copyright 2017 Vera Lobacheva (http://iamvera.com)
  * Released under the MIT license (LICENSE.txt)
  */
-
 /* Background for the tree. May use for <body> element */
 .jsontree_bg {
     background: #FFF;
 }
-
 /* Styles for the container of the tree (e.g. fonts, margins etc.) */
 .jsontree_tree {
     margin-left: -15px;
     font-family: 'PT Mono', monospace;
     font-size: 14px;
-    list-style-type: none; /* somehow this removes only the root's bullet but none others */
+    list-style-type: none;
+    /* somehow this removes only the root's bullet but none others */
 }
-
 /* Styles for a list of child nodes */
 .jsontree_child-nodes {
     display: none;
@@ -26,10 +24,9 @@
     margin-bottom: 5px;
     line-height: 2;
 }
-.jsontree_node_expanded > .jsontree_value-wrapper > .jsontree_value > .jsontree_child-nodes {
+.jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_child-nodes {
     display: block;
 }
-
 /* Styles for labels */
 .jsontree_label-wrapper {
     float: left;
@@ -44,16 +41,15 @@
     border-radius: 4px;
     cursor: default;
 }
-.jsontree_node_marked > .jsontree_label-wrapper > .jsontree_label {
+.jsontree_node_marked>.jsontree_label-wrapper>.jsontree_label {
     background: #fff2aa;
 }
-
 /* Styles for values */
 .jsontree_value-wrapper {
     display: block;
     overflow: hidden;
 }
-.jsontree_node_complex > .jsontree_value-wrapper {
+.jsontree_node_complex>.jsontree_value-wrapper {
     overflow: inherit;
 }
 .jsontree_value {
@@ -62,7 +58,6 @@
     color: #000;
     font-weight: bold;
 }
-
 /* Styles for active elements */
 .jsontree_expand-button {
     position: absolute;
@@ -73,22 +68,22 @@
     height: 11px;
     background-image: url('icons.svg');
 }
-.jsontree_node_expanded > .jsontree_label-wrapper > .jsontree_label > .jsontree_expand-button {
+.jsontree_node_expanded>.jsontree_label-wrapper>.jsontree_label>.jsontree_expand-button {
     background-position: 0 -11px;
 }
 .jsontree_show-more {
     cursor: pointer;
 }
-.jsontree_node_expanded > .jsontree_value-wrapper > .jsontree_value > .jsontree_show-more {
+.jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_show-more {
     display: none;
 }
-.jsontree_node_empty > .jsontree_label-wrapper > .jsontree_label > .jsontree_expand-button,
-.jsontree_node_empty > .jsontree_value-wrapper > .jsontree_value > .jsontree_show-more {
+.jsontree_node_empty>.jsontree_label-wrapper>.jsontree_label>.jsontree_expand-button,
+.jsontree_node_empty>.jsontree_value-wrapper>.jsontree_value>.jsontree_show-more {
     display: none !important;
 }
-.jsontree_node_complex > .jsontree_label-wrapper > .jsontree_label {
+.jsontree_node_complex>.jsontree_label-wrapper>.jsontree_label {
     cursor: pointer;
 }
-.jsontree_node_empty > .jsontree_label-wrapper > .jsontree_label {
+.jsontree_node_empty>.jsontree_label-wrapper>.jsontree_label {
     cursor: default !important;
 }
