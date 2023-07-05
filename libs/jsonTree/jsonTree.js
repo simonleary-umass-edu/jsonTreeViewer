@@ -222,17 +222,19 @@ var jsonTree = (function() {
             labelEl,
             template = function(label, val) {
                 var str = '\
-                    <span class="jsontree_label-wrapper">\
-                        <span class="jsontree_label">"' +
-                            label +
-                        '"</span> : \
-                    </span>\
                     <span class="jsontree_value-wrapper">\
                         <span class="jsontree_value jsontree_value_' + self.type + '">' +
                             val +
                         '</span>' +
                     '</span>';
-
+                if (label !== null) {
+                    str = '\
+                    <span class="jsontree_label-wrapper">\
+                        <span class="jsontree_label">' +
+                            label +
+                        '</span> : \
+                    </span>' + str;
+                }
                 return str;
             };
 
@@ -243,21 +245,22 @@ var jsonTree = (function() {
         el.innerHTML = template(label, val);
 
         self.el = el;
+        if (label !== null) {
+            labelEl = el.querySelector('.jsontree_label');
 
-        labelEl = el.querySelector('.jsontree_label');
+            labelEl.addEventListener('click', function(e) {
+                if (e.altKey) {
+                    self.toggleMarked();
+                    return;
+                }
 
-        labelEl.addEventListener('click', function(e) {
-            if (e.altKey) {
-                self.toggleMarked();
-                return;
-            }
-
-            if (e.shiftKey) {
-                document.getSelection().removeAllRanges();
-                alert(self.getJSONPath());
-                return;
-            }
-        }, false);
+                if (e.shiftKey) {
+                    document.getSelection().removeAllRanges();
+                    alert(self.getJSONPath());
+                    return;
+                }
+            }, false);
+        }
     }
 
     _NodeSimple.prototype = {
