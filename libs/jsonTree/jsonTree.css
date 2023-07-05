@@ -16,6 +16,7 @@
     margin-left: -15px;
     font-family: 'PT Mono', monospace;
     font-size: 14px;
+    list-style-type: none; /* somehow this removes only the root's bullet but none others */
 }
 
 /* Styles for a list of child nodes */
