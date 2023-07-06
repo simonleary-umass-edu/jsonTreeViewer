@@ -436,6 +436,7 @@ var jsonTree = (function () {
             self.isRoot = true;
             self.parent = null;
             el.classList.add('jsontree_node_expanded');
+            el.classList.add('jsontree_root');
         }
         self.el = el;
         self.childNodes = childNodes;
@@ -455,8 +456,8 @@ var jsonTree = (function () {
             el.classList.add('jsontree_node_empty');
         } else {
             var all_children_simple = true; // Flag to track if all children are NodeSimple
-            for (var i = 0; i < childNodes.length; i++) {
-                if (childNodes[i].isComplex) {
+            for (childNode of childNodes){
+                if (childNode.isComplex) {
                     all_children_simple = false;
                     break;
                 }

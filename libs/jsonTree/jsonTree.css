@@ -96,3 +96,7 @@
 ul {
     list-style-type: none;
 }
+
+.jsontree_root > .jsontree_value-wrapper > .jsontree_value_object > br {
+    display: none;
+}
