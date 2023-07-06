@@ -453,6 +453,18 @@ var jsonTree = (function () {
         self.isEmpty = !Boolean(childNodes.length);
         if (self.isEmpty) {
             el.classList.add('jsontree_node_empty');
+        } else {
+            var all_children_simple = true; // Flag to track if all children are NodeSimple
+            for (var i = 0; i < childNodes.length; i++) {
+                if (childNodes[i].isComplex) {
+                    all_children_simple = false;
+                    break;
+                }
+            }
+            // Add jsontree_leaf-nodes class if all children are NodeSimple
+            if (all_children_simple) {
+                childNodesUl.classList.add('jsontree_leaf-nodes');
+            }
         }
     }
     utils.inherits(_NodeComplex, _NodeSimple);

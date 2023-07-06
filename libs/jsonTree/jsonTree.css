@@ -25,6 +25,15 @@
 .jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_child-nodes {
     display: block;
 }
+/* column grid: */
+.jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_child-nodes.jsontree_leaf-nodes {
+    -moz-column-count: auto;
+    -webkit-column-count: auto;
+    column-count: auto;
+    -moz-column-width: 200px;
+    -webkit-column-width: 200px;
+    column-width: 200px;
+}
 /* Styles for labels */
 .jsontree_label-wrapper {
     float: left;
@@ -54,7 +63,6 @@
     vertical-align: top;
     display: inline;
     color: #000;
-    font-weight: bold;
 }
 /* Styles for active elements */
 .jsontree_expand-button {
@@ -85,7 +93,6 @@
 .jsontree_node_empty>.jsontree_label-wrapper>.jsontree_label {
     cursor: default !important;
 }
-
 ul {
     list-style-type: none;
 }
