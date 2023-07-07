@@ -14,13 +14,13 @@
     margin-left: 0px;
     font-family: 'PT Mono', monospace;
     font-size: 14px;
+    line-height: 2;
 }
 /* Styles for a list of child nodes */
 .jsontree_child-nodes {
     display: none;
-    margin-left: -20px;
     margin-bottom: 5px;
-    line-height: 2;
+    margin-left: 15px; /* this covers up expand button position left: -15px*/
 }
 .jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_child-nodes {
     display: block;
@@ -32,15 +32,13 @@
     column-count: auto;
     -moz-column-width: 150px;
     -webkit-column-width: 150px;
-    /* this is totally specific to the data that I'm displaying*/
-    column-width: 200px;
+    column-width: 180px; /* this is totally specific to the data that I'm displaying*/
 }
 .jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_child-nodes.jsontree_leaf-nodes {
     list-style: circle;
 }
 .jsontree_node_expanded>.jsontree_value-wrapper>.jsontree_value>.jsontree_child-nodes.jsontree_leaf-nodes>.jsontree_node {
-    /* this covers up the bullet point from list-display */
-    margin-left: 25px;
+    margin-right: 10px; /* don't come too close to the bullet point on your right side */
 }
 /* Styles for labels */
 .jsontree_label-wrapper {
@@ -103,4 +101,10 @@
 }
 ul {
     list-style-type: none;
+}
+ul.jsontree_tree {
+    padding-inline-start: 0px;
+}
+ul.jsontree_child-nodes {
+    padding-inline-start: 0px;
 }
