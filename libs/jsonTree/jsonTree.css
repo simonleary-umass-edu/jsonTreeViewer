@@ -11,7 +11,7 @@
 }
 /* Styles for the container of the tree (e.g. fonts, margins etc.) */
 .jsontree_tree {
-    margin-left: -40px;
+    margin-left: 0px;
     font-family: 'PT Mono', monospace;
     font-size: 14px;
 }
@@ -30,9 +30,9 @@
     -moz-column-count: auto;
     -webkit-column-count: auto;
     column-count: auto;
-    -moz-column-width: 200px;
-    -webkit-column-width: 200px;
-    column-width: 200px;
+    -moz-column-width: 150px;
+    -webkit-column-width: 150px;
+    column-width: 150px;
 }
 /* Styles for labels */
 .jsontree_label-wrapper {
