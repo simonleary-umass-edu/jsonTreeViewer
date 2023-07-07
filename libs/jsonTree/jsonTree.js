@@ -387,7 +387,8 @@ var jsonTree = (function () {
                             <div class="jsontree_value jsontree_value_' + self.type + '">\
                                 <b>' + sym[0] + '</b>\
                                 <span class="jsontree_show-more">&hellip;</span>' +
-                                (sym[0] == '' ? '<br>' : '') + // if sym[0] empty, we need a new line
+                                // this prevents the first child from rendering on same line
+                                (sym[0] == '' ? '<br class="no_sym0_line_break">' : '') +
                                 '<ul class="jsontree_child-nodes"></ul>\
                                 <b>' + sym[1] + '</b>' +
                     '</div>'
@@ -437,6 +438,8 @@ var jsonTree = (function () {
             self.parent = null;
             el.classList.add('jsontree_node_expanded');
             el.classList.add('jsontree_root');
+            line_break_deleteme = el.querySelector('.no_sym0_line_break')
+            line_break_deleteme.parentNode.removeChild(line_break_deleteme)
         }
         self.el = el;
         self.childNodes = childNodes;
